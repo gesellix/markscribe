@@ -23,4 +23,4 @@ jobs:
         uses: goreleaser/goreleaser-action@v7
         with:
           version: latest
-          args: release --snapshot --skip-publish --skip-sign --rm-dist
+          args: release --snapshot --skip=publish,sign --clean
