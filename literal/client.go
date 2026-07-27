@@ -1,3 +1,4 @@
+// Package literal provides a client for the literal.club GraphQL API.
 package literal
 
 import (

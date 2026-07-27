@@ -1,3 +1,5 @@
+// Package main implements markscribe, a template-driven markdown
+// generator with GitHub, RSS, and reading-list data sources.
 package main
 
 import (

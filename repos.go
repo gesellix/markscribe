@@ -163,7 +163,7 @@ func recentPullRequests(count int) []PullRequest {
 	var pullRequests []PullRequest
 	variables := map[string]interface{}{
 		"username": githubv4.String(username),
-		"count":    githubv4.Int(count + 1), // +1 in case we encounter the meta-repo itself
+		"count":    githubv4.Int(count + 1), //nolint:gosec // count is a small CLI-provided value, never near int32 overflow (+1 in case we encounter the meta-repo itself)
 	}
 	err := gitHubClient.Query(context.Background(), &recentPullRequestsQuery, variables)
 	if err != nil {
@@ -195,7 +195,7 @@ func recentRepos(count int) []Repo {
 	var repos []Repo
 	variables := map[string]interface{}{
 		"username": githubv4.String(username),
-		"count":    githubv4.Int(count + 1), // +1 in case we encounter the meta-repo itself
+		"count":    githubv4.Int(count + 1), //nolint:gosec // count is a small CLI-provided value, never near int32 overflow (+1 in case we encounter the meta-repo itself)
 		"isFork":   githubv4.Boolean(false),
 	}
 	err := gitHubClient.Query(context.Background(), &recentReposQuery, variables)
@@ -225,7 +225,7 @@ func recentForks(count int) []Repo {
 	var repos []Repo
 	variables := map[string]interface{}{
 		"username": githubv4.String(username),
-		"count":    githubv4.Int(count + 1), // +1 in case we encounter the meta-repo itself
+		"count":    githubv4.Int(count + 1), //nolint:gosec // count is a small CLI-provided value, never near int32 overflow (+1 in case we encounter the meta-repo itself)
 		"isFork":   githubv4.Boolean(true),
 	}
 	err := gitHubClient.Query(context.Background(), &recentReposQuery, variables)

@@ -25,7 +25,7 @@ func gists(count int) []Gist {
 	var gists []Gist
 	variables := map[string]interface{}{
 		"username": githubv4.String(username),
-		"count":    githubv4.Int(count),
+		"count":    githubv4.Int(count), //nolint:gosec // count is a small CLI-provided value, never near int32 overflow
 	}
 	err := gitHubClient.Query(context.Background(), &gistsQuery, variables)
 	if err != nil {
