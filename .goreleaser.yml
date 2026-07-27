@@ -1,7 +1,5 @@
 version: 2
 
-env:
-  - GO111MODULE=on
 before:
   hooks:
     - go mod tidy
