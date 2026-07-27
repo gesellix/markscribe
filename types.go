@@ -93,6 +93,17 @@ type qlRelease struct {
 	}
 }
 
+// qlRepositoryLite omits fields (notably stargazers, which requires a
+// per-repository aggregation) that are expensive to resolve across the up to
+// 100 repositories commitContributionsByRepository can return, and that
+// contributedRepos' callers don't actually need.
+type qlRepositoryLite struct {
+	NameWithOwner githubv4.String
+	URL           githubv4.String
+	Description   githubv4.String
+	IsPrivate     githubv4.Boolean
+}
+
 type qlRepository struct {
 	NameWithOwner githubv4.String
 	URL           githubv4.String

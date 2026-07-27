@@ -23,7 +23,7 @@ var recentContributionsQuery struct {
 						}
 					}
 				} `graphql:"contributions(first: 1)"`
-				Repository qlRepository
+				Repository qlRepositoryLite
 			} `graphql:"commitContributionsByRepository(maxRepositories: 100)"`
 		} `graphql:"contributionsCollection(from: $from, to: $to)"`
 	} `graphql:"user(login:$username)"`
@@ -57,7 +57,7 @@ var recentReposQuery struct {
 
 var repoReleasesQuery struct {
 	Repository struct {
-		qlRepository
+		qlRepositoryLite
 		Releases qlRelease `graphql:"releases(first: 10, orderBy: {field: CREATED_AT, direction: DESC})"`
 	} `graphql:"repository(owner:$owner, name:$name)"`
 }
@@ -76,7 +76,7 @@ var repoQuery struct {
 }
 
 type repoContribution struct {
-	Repository qlRepository
+	Repository qlRepositoryLite
 	OccurredAt time.Time
 }
 
@@ -141,7 +141,11 @@ func recentContributions(count int) []Contribution {
 		}
 
 		contributions = append(contributions, Contribution{
-			Repo:       repoFromQL(v.Repository),
+			Repo: Repo{
+				Name:        string(v.Repository.NameWithOwner),
+				URL:         string(v.Repository.URL),
+				Description: string(v.Repository.Description),
+			},
 			OccurredAt: v.OccurredAt,
 		})
 	}
@@ -268,7 +272,11 @@ func recentReleases(count int) []Repo {
 			panic(err)
 		}
 
-		r := repoFromQL(repoReleasesQuery.Repository.qlRepository)
+		r := Repo{
+			Name:        string(repoReleasesQuery.Repository.NameWithOwner),
+			URL:         string(repoReleasesQuery.Repository.URL),
+			Description: string(repoReleasesQuery.Repository.Description),
+		}
 
 		for _, rel := range repoReleasesQuery.Repository.Releases.Nodes {
 			if rel.IsPrerelease || rel.IsDraft {
@@ -288,9 +296,6 @@ func recentReleases(count int) []Repo {
 	}
 
 	sort.Slice(repos, func(i, j int) bool {
-		if repos[i].LastRelease.PublishedAt.Equal(repos[j].LastRelease.PublishedAt) {
-			return repos[i].Stargazers > repos[j].Stargazers
-		}
 		return repos[i].LastRelease.PublishedAt.After(repos[j].LastRelease.PublishedAt)
 	})
 
