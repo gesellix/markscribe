@@ -275,7 +275,7 @@ func recentReleases(count int) []Repo {
 				continue
 			}
 			if repoReleasesQuery.Repository.Releases.Nodes[0].TagName == "" ||
-				repoReleasesQuery.Repository.Releases.Nodes[0].PublishedAt.Time.IsZero() {
+				repoReleasesQuery.Repository.Releases.Nodes[0].PublishedAt.IsZero() {
 				continue
 			}
 			r.LastRelease = releaseFromQL(repoReleasesQuery.Repository.Releases)
